@@ -1,0 +1,61 @@
+<?php
+
+namespace {{ namespace }};
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+
+class {{ className }}
+{
+    /**
+     * The fields that you'd like to search.
+     */
+    protected array $fields;
+
+    /**
+     * The model you'd like to instantiate
+     */    protected string $modelClassName;
+
+    /**
+     * Instantiate the model instance.
+     * 
+     * @return Model
+     */
+    protected function modelInstance(): Model
+    {
+        return app($this->modelClassName);
+    }
+
+    /**
+     * Search for posts based on the given search term.
+     *
+     * @param  Request  $request     The HTTP request object.
+     * @param  string   $inputName   The name of the input field containing the search term (default: 'search').
+     * @return LengthAwarePaginator  The paginated search results.
+     */
+    public function search(Request $request, string $inputName = 'search'): LengthAwarePaginator
+    {
+        // Start with a base query for the Post model
+        $query = $this->modelInstance()::query();
+        $fieldsToSearch = $this->fields;
+
+        // Check if the request has the specified input name
+        if ($request->has($inputName)) {
+            // Retrieve the search term from the request input
+            $search = $request->input($inputName);
+
+            // Add search conditions to the query
+            foreach ($fieldsToSearch as $key => $value) {
+                if ($key == 0) {
+                    $query->where($value, 'like', '%' . $search . '%');
+                } else {
+                    $query->orWhere($value, 'like', '%' . $search . '%');
+                }
+            }
+        }
+
+        // Perform pagination on the query and return the results
+        return $query->paginate(10);
+    }
+}

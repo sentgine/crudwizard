@@ -1,0 +1,14 @@
+<div class="crudwizard-form-fieldset">
+    <label for="title">{{ label }}</label>
+    <input 
+        type="text" 
+        id="{{ fieldName }}" 
+        name="{{ fieldName }}" 
+        value="{{ ${{ resourceNameSingular }}->{{ fieldName }} }}" 
+        placeholder="Enter {{ fieldName }}..." 
+        class="crudwizard-form-text-input @error('{{ fieldName }}') crudwizard-invalid-input @enderror " 
+    />
+    @error('{{ fieldName }}')
+        <div class="crudwizard-invalid">{{ $message }}</div>
+    @enderror
+</div>

@@ -1,0 +1,22 @@
+@extends('{{ layoutName }}')
+@section('title', 'Edit {{ resourceNameSingular }} - '.${{ resourceNameSingular }}->id)
+@section('content')
+<div class="crudwizard-resource-container">
+    <div class="crudwizard-top-container">
+        <h1 class="crudwizard-resource-title">Edit {{ resourceNameSingular }}</h1> 
+        <a href="{{ route('{{ resourceNamePlural }}.index') }}" class="crudwizard-back-button">
+            &#8592; Back
+        </a>
+    </div>
+    <div class="crudwizard-form-container">
+        <form method="POST" action="{{ route('{{ resourceNamePlural }}.update', ${{ resourceNameSingular }}->id) }}" class="crudwizard-form">
+            @csrf
+            @method('PUT')
+            @include('{{ viewPrefix }}{{ resourceNamePlural }}._edit-form', [
+                '{{ resourceNameSingular }}' => ${{ resourceNameSingular }}
+            ])
+            <button type="submit" class="crudwizard-save-button">Save</button>
+        </form>
+    </div>
+</div>
+@endsection

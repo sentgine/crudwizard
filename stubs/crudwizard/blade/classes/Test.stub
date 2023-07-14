@@ -1,0 +1,136 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ useModelClass }};
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
+class {{ testClass }} extends TestCase
+{
+    use RefreshDatabase;
+
+    protected $connection = 'testing';
+
+    public function test_get_{{ resourceNamePlural }}_returns_{{ resourceNameSingular }}_list(): void
+    {
+        // Make a GET request to the /{{ resourceNamePlural }} endpoint
+        $response = $this->get('{{ routePrefix }}{{ resourceNamePlural }}');
+
+        // Assert that the response status code is 200 (OK)
+        $response->assertStatus(200);
+
+        // Assert that the response view is '{{ resourceNamePlural }}.index'
+        $response->assertViewIs('{{ viewPrefix }}{{ resourceNamePlural }}.index');
+
+        // Assert that the response view has a variable named '{{ resourceNamePlural }}'
+        $response->assertViewHas('{{ resourceNamePlural }}');
+    }
+
+    public function test_get_create_{{ resourceNameSingular }}_returns_form_view(): void
+    {
+        // Make a GET request to the /{{ resourceNamePlural }}/create endpoint
+        $response = $this->get('{{ routePrefix }}{{ resourceNamePlural }}/create');
+
+        // Assert that the response status code is 200 (OK)
+        $response->assertStatus(200);
+
+        // Assert that the response view is '{{ resourceNamePlural }}.create'
+        $response->assertViewIs('{{ viewPrefix }}{{ resourceNamePlural }}.create');
+    }
+
+    public function test_{{ resourceNameSingular }}_store_creates_new_{{ resourceNameSingular }}(): void
+    {
+        // Generate fake {{ resourceNameSingular }} data using Faker library
+        $requestData = [{{ fakeFactoryFields }}
+        ];
+
+        // Make a POST request to the /{{ resourceNamePlural }} endpoint with the generated {{ resourceNameSingular }} data
+        $response = $this->post('{{ routePrefix }}{{ resourceNamePlural }}', $requestData);
+
+        // Assert that the response status code is 302 (Redirect)
+        $response->assertStatus(302);
+
+        // Assert that the response is a redirect response
+        $response->assertRedirect();
+
+        // Assert that the session contains the success message '{{ resourceNameSingularCapitalFirst }} created successfully!'
+        $response->assertSessionHas('prompt');
+
+        // Assert that the {{ resourceNameSingular }} data was actually stored in the '{{ resourceNamePlural }}' table of the database
+        $this->assertDatabaseHas('{{ resourceNamePlural }}', $requestData);
+    }
+
+    public function test_get_show_{{ resourceNameSingular }}_returns_view(): void
+    {
+        // Create a sample {{ resourceNameSingular }}
+        ${{ resourceNameSingular }} = {{ resourceNameSingularCapitalFirst }}::factory()->create();
+
+        // Make a GET request to the show endpoint
+        $response = $this->get("{{ routePrefix }}{{ resourceNamePlural }}/{${{ resourceNameSingular }}->id}");
+
+        // Assert that the response status is 200 (OK)
+        $response->assertStatus(200);
+
+        // Assert that the response contains the {{ resourceNameSingular }}'s title
+        $response->assertSee(${{ resourceNameSingular }}->title);
+
+        // Assert that the response contains the {{ resourceNameSingular }}'s content
+        $response->assertSee(${{ resourceNameSingular }}->content);
+    }
+
+    public function test_get_edit_{{ resourceNameSingular }}_returns_form_view(): void
+    {
+        // Create a sample {{ resourceNameSingular }}
+        ${{ resourceNameSingular }} = {{ resourceNameSingularCapitalFirst }}::factory()->create();
+
+        // Make a GET request to the show endpoint
+        $response = $this->get("{{ routePrefix }}{{ resourceNamePlural }}/{${{ resourceNameSingular }}->id}/edit");
+
+        // Assert that the response status is 200 (OK)
+        $response->assertStatus(200);
+
+        // Assert that the response contains the {{ resourceNameSingular }}'s title
+        $response->assertSee(${{ resourceNameSingular }}->title);
+
+        // Assert that the response contains the {{ resourceNameSingular }}'s content
+        $response->assertSee(${{ resourceNameSingular }}->content);
+    }
+
+    public function test_put_update_{{ resourceNameSingular }}_updates_existing_{{ resourceNameSingular }}(): void
+    {
+        // Create a sample {{ resourceNameSingular }}
+        ${{ resourceNameSingular }} = {{ resourceNameSingularCapitalFirst }}::factory()->create();
+
+        // Generate new data for updating the {{ resourceNameSingular }}
+        $newData = [{{ fakeFactoryFields }}
+        ];
+
+        // Make a PUT request to the update endpoint with the new data
+        $response = $this->put("{{ routePrefix }}{{ resourceNamePlural }}/{${{ resourceNameSingular }}->id}", $newData);
+
+        // Assert that the response redirects to the updated {{ resourceNameSingular }}'s URL
+        $response->assertRedirect("{{ routePrefix }}{{ resourceNamePlural }}/{${{ resourceNameSingular }}->id}");
+
+        // Assert that the {{ resourceNameSingular }} data is updated in the database
+        $this->assertDatabaseHas('{{ resourceNamePlural }}', $newData);
+    }
+
+    public function test_delete_{{ resourceNameSingular }}_deletes_existing_{{ resourceNameSingular }}(): void
+    {
+        // Create a {{ resourceNameSingular }} instance
+        ${{ resourceNameSingular }} = {{ resourceNameSingularCapitalFirst }}::factory()->create();
+
+        // Make a DELETE request to the destroy endpoint for the given {{ resourceNameSingular }}
+        $response = $this->delete("{{ routePrefix }}{{ resourceNamePlural }}/{${{ resourceNameSingular }}->id}");
+
+        // Assert that the response is a redirect response
+        $response->assertRedirect('{{ routePrefix }}{{ resourceNamePlural }}');
+
+        // Assert that the session contains the success message
+        $response->assertSessionHas('prompt');
+
+        // Assert that the ${{ resourceNameSingular }} no longer exists in the database
+        $this->assertDatabaseMissing('{{ resourceNamePlural }}', ['id' => ${{ resourceNameSingular }}->id]);
+    }
+}

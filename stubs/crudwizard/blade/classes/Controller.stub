@@ -1,0 +1,129 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ useControllerClass }}\Controller;
+use {{ useRequestClass }};
+use {{ useModelClass }};
+use {{ useSearchServiceClass }};
+use Illuminate\Http\Request;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+
+class {{ controllerClass }} extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     * 
+     * @param Request $request The HTTP request object.
+     * 
+     * @return View Returns a view to display a listing of {{ resourceNamePlural }}.
+     */
+    public function index(Request $request): View
+    {
+        // Use the {{ searchServiceClass }} to retrieve a list of {{ resourceNamePlural }} based on the request.
+        $search = new {{ searchServiceClass }}();
+        ${{ resourceNamePlural }} = $search->search($request);
+
+        // Return the '{{ resourceNamePlural }}.index' view with the retrieved {{ resourceNamePlural }}.
+        return view('{{ viewPrefix }}{{ resourceNamePlural }}.index', compact('{{ resourceNamePlural }}'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     * 
+     * @return View Returns a view to display the create {{ resourceNameSingular }} form.
+     */
+    public function create(): View
+    {
+        // Return the '{{ resourceNamePlural }}.create' view.
+        return view('{{ viewPrefix }}{{ resourceNamePlural }}.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     * 
+     * @param {{ requestClass }} $request The HTTP request object.
+     * 
+     * @return RedirectResponse Returns a redirect response after storing the {{ resourceNameSingular }}.
+     */
+    public function store({{ requestClass }} $request): RedirectResponse
+    {
+        // Create a new instance of the {{ modelClass }} model.
+        $model = new {{ modelClass }}();
+
+        // Retrieve a portion of the validated input data based on the model's fillable fields.
+        $validated = $request->safe()->only($model->getFillable());
+
+        // Create a new {{ resourceNameSingular }} using the retrieved data.
+        {{ modelClass }}::create($validated);
+
+        // Redirect back to the previous page with a success message.
+        return back()->with('prompt', 'A {{ resourceNameSingular }} is created successfully!');
+    }
+
+    /**
+     * Display the specified resource.
+     * 
+     * @param string $id The ID of the {{ resourceNameSingular }} to display.
+     * 
+     * @return View Returns a view to display the specified {{ resourceNameSingular }}.
+     */
+    public function show(string $id): View
+    {
+        // Find the {{ resourceNameSingular }} with the given ID.
+        ${{ resourceNameSingular }} = {{ modelClass }}::find($id);
+
+        // Return the '{{ resourceNamePlural }}.show' view with the retrieved {{ resourceNameSingular }}.
+        return view('{{ viewPrefix }}{{ resourceNamePlural }}.show', compact('{{ resourceNameSingular }}'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     * 
+     * @param {{ modelClass }} ${{ resourceNameSingular }} The {{ resourceNameSingular }} to edit.
+     * 
+     * @return View Returns a view to display the edit {{ resourceNameSingular }} form.
+     */
+    public function edit({{ modelClass }} ${{ resourceNameSingular }}): View
+    {
+        // Return the '{{ resourceNamePlural }}.edit' view with the specified {{ resourceNameSingular }}.
+        return view('{{ viewPrefix }}{{ resourceNamePlural }}.edit', compact('{{ resourceNameSingular }}'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     * 
+     * @param {{ requestClass }} $request The HTTP request object.
+     * @param {{ modelClass }} ${{ resourceNameSingular }} The {{ resourceNameSingular }} to update.
+     * 
+     * @return RedirectResponse Returns a redirect response after updating the {{ resourceNameSingular }}.
+     */
+    public function update({{ requestClass }} $request, {{ modelClass }} ${{ resourceNameSingular }}): RedirectResponse
+    {
+        // Retrieve a portion of the validated input data based on the model's fillable fields.
+        $validated = $request->safe()->only(${{ resourceNameSingular }}->getFillable());
+
+        // Update the {{ resourceNameSingular }} with the retrieved data.
+        ${{ resourceNameSingular }}->update($validated);
+
+        // Redirect to the updated {{ resourceNameSingular }}'s page with a success message.
+        return redirect("{{ routePrefix }}{{ resourceNamePlural }}/{${{ resourceNameSingular }}->id}")->with('prompt', 'A {{ resourceNameSingular }} updated successfully!');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     * 
+     * @param {{ modelClass }} ${{ resourceNameSingular }} The {{ resourceNameSingular }} to delete.
+     * 
+     * @return RedirectResponse Returns a redirect response after deleting the {{ resourceNameSingular }}.
+     */
+    public function destroy({{ modelClass }} ${{ resourceNameSingular }}): RedirectResponse
+    {
+        // Delete the specified {{ resourceNameSingular }}.
+        ${{ resourceNameSingular }}->delete();
+
+        // Redirect to the {{ resourceNamePlural }} index page with a success message.
+        return redirect("{{ routePrefix }}{{ resourceNamePlural }}")->with('prompt', 'A {{ resourceNameSingular }} deleted successfully!');
+    }
+}

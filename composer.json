@@ -1,0 +1,31 @@
+{
+    "name": "sentgine/crudwizard",
+    "description": "A simple but powerful Laravel package for effortless CRUD operations.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Sentgine\\Crudwizard\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Sentgine\\Crudwizard\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Sentgine\\Crudwizard\\CrudwizardServiceProvider"
+            ]
+        }
+    },
+    "authors": [
+        {
+            "name": "Sentgine",
+            "email": "sentgine@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}

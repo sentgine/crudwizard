@@ -1,0 +1,24 @@
+@extends('{{ layoutName }}')
+@section('title', '{{ resourceNameSingularCapitalFirst }} - ' . ${{ resourceNameSingular }}->id)
+@section('content')
+<div class="crudwizard-resource-container">   
+    <div class="crudwizard-top-container">
+        <h1 class="crudwizard-resource-title">{{ resourceNameSingularCapitalFirst }} details</h1> 
+        <a href="{{ route('{{ resourceNamePlural }}.index') }}" class="crudwizard-back-button">
+            &#8592; Back
+        </a>
+    </div>
+    <div class="crudwizard-table-container">   
+        <table class="crudwizard-table">
+            <tbody>
+                @foreach (${{ resourceNameSingular }}->getAttributes() as $attribute => $value)
+                    <tr>
+                        <td class="crudwizard-td">{{ $attribute }}</td>
+                        <td class="crudwizard-td">{{ $value }}</td>
+                    </tr>
+                @endforeach   
+            </tbody>           
+        </table>      
+    </div>
+</div>
+@endsection

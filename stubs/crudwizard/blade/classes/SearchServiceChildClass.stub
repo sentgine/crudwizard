@@ -1,0 +1,9 @@
+<?php
+
+namespace {{ namespace }};
+
+class {{ className }} extends {{ parentClassName }}
+{
+    protected array $fields = [{{ fields }}];
+    protected string $modelClassName = '{{ modelClassName }}';
+}
