@@ -48,33 +48,16 @@ class CrudwizardRoute extends CrudwizardGenerate
         }
 
         // Create the resource path and web route path.
-        $resourcePath = base_path('routes/crudwizard/');
-        $webRouteResourcePath = $resourcePath . 'web.php';
-        $webRouteContent = '<?php' . "\n\n" . 'use Illuminate\Support\Facades\Route;' . "\n";
+        $webRouteResourcePath = base_path('routes/web.php');
         $webRouteResourceContent = "\nRoute::resource('/" . $link . "', " . $data['controller_namespace'] . '\\' . $controllerClass . '::class);';
 
-        // Create the resource path directory.
-        $this->createTheDirectory($resourcePath);
-
-        // Create the web route resource file.
-        $this->createTheFile($webRouteResourcePath, $webRouteContent);
-
+        $this->info('Appending the route to the routes/web.php');
         // Add route resource to web.php in the resource path.
         $this->appendTheContentToTheFile(
             $webRouteResourcePath,
             $webRouteResourceContent,
             "Adding route resource '" . $data['resource_name_plural'] . "' to $webRouteResourcePath...",
             "The '" . $data['resource_name_plural'] . "' resource already exists. --skipping"
-        );
-
-        // Append the crudwizard web resource to the main web.php file.
-        $mainWebRoute = base_path('routes/web.php');
-        $mainWebRouteContentToAppend = "\nrequire __DIR__.'/crudwizard/web.php';";
-        $this->appendTheContentToTheFile(
-            $mainWebRoute,
-            $mainWebRouteContentToAppend,
-            "Adding crudwizard web resource to $mainWebRoute...",
-            "The web route was already added. --skipping"
         );
     }
 }
