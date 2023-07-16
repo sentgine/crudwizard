@@ -412,14 +412,16 @@ class CrudwizardGenerate extends Command
             '_edit-form' => [
                 'origin' => [
                     'string' => base_path($basePathOrigin . 'form-fields/edit-form/text.stub'),
-                    'text' => base_path($basePathOrigin . 'form-fields/edit-form/text.stub')
+                    'text' => base_path($basePathOrigin . 'form-fields/edit-form/text.stub'),
+                    'date' => base_path($basePathOrigin . 'form-fields/edit-form/date.stub'),
                 ],
                 'destination' => $pathToTheViewFile
             ],
             '_create-form' => [
                 'origin' => [
                     'string' =>  base_path($basePathOrigin . 'form-fields/create-form/text.stub'),
-                    'text' =>  base_path($basePathOrigin . 'form-fields/create-form/text.stub')
+                    'text' =>  base_path($basePathOrigin . 'form-fields/create-form/text.stub'),
+                    'date' =>  base_path($basePathOrigin . 'form-fields/create-form/date.stub'),
                 ],
                 'destination' => $pathToTheViewFile
             ],

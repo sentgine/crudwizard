@@ -1,5 +1,5 @@
 <div class="crudwizard-form-fieldset">
-    <label for="title">{{ label }}</label>
+    <label for="{{ fieldName }}">{{ label }}</label>
     <input 
         type="text" 
         id="{{ fieldName }}" 

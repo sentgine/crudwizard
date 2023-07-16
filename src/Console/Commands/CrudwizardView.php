@@ -51,8 +51,8 @@ class CrudwizardView extends CrudwizardGenerate
         // Prepare the variables
         $layoutName = $data['layout_name'];
         $viewPrefix = $data['view_prefix'];
-        $resourceNameSingularCapitalFirst = $data['layout_name'];
-        $resourceNamePluralCapitalFirst = $data['resource_name_ucfirst'];
+        $resourceNameSingularCapitalFirst = Str::ucfirst($data['resource_name_singular']);
+        $resourceNamePluralCapitalFirst = Str::ucfirst($data['resource_name_plural']);
         $resourceNameSingular = $data['resource_name_singular'];
         $resourceNamePlural = $data['resource_name_plural'];
         $resourceDirectory = $data['resource_directory'];

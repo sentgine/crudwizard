@@ -1,0 +1,24 @@
+<div class="crudwizard-form-fieldset">
+    <label for="{{ fieldName }}">Date</label>
+    <input 
+        type="text" 
+        id="{{ fieldName }}" 
+        name="{{ fieldName }}" 
+        value="{{ old('{{ fieldName }}') }}" 
+        placeholder="Enter {{ fieldName }}..." 
+        x-init="new Pikaday({ 
+            field: $el, 
+            format: 'YYYY-MM-DD',
+            toString(date, format) {
+                const day = date.getDate();
+                const month = date.getMonth() + 1;
+                const year = date.getFullYear();
+                return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+            }
+        })"
+        class="crudwizard-form-text-input @error('content') crudwizard-invalid-input @enderror" 
+    />
+     @error('{{ fieldName }}')
+        <div class="crudwizard-invalid">{{ $message }}</div>
+    @enderror
+</div>

@@ -43,11 +43,11 @@ class CrudwizardDelete extends CrudwizardGenerate
         }
 
         // Ask one more time if the user wants to continue
-        // $isContinue = $this->ask("Are you sure you want to delete the $resourceName resource? <fg=yellow>[yes/no]</>");
-        // if (in_array($isContinue, ['no', 'NO', 'No', 'nO'])) {
-        //     $this->info('Exiting...');
-        //     return;
-        // }
+        $isContinue = $this->ask("Are you sure you want to delete the $resourceName resource? <fg=yellow>[yes/no]</>");
+        if (in_array($isContinue, ['no', 'NO', 'No', 'nO'])) {
+            $this->info('Exiting...');
+            return;
+        }
 
         // Display an info message about removing the specified resource
         $this->info("Removing the " . $this->replaceDirectorySlash($resourceName) . " resource...");
@@ -57,6 +57,7 @@ class CrudwizardDelete extends CrudwizardGenerate
         $extension = '.php';
         $files = [
             'controllerClassPath' => $this->setControllerClassPath($data),
+            'controllerApiClassPath' => $this->setControllerClassPath($data, true),
             'modelClassPath' => app_path('Models/' . $data['model_class'] . $extension),
             'requestClassPath' => app_path('Http/Requests/' . $data['request_class'] . $extension),
             'factoryClassPath' => database_path('factories/' . $data['factory_class'] . $extension),
@@ -97,15 +98,21 @@ class CrudwizardDelete extends CrudwizardGenerate
      * Sets the file path for the controller class based on the given resource data.
      *
      * @param array $resourceData The data of the resource.
+     *  @param bool $isApi Determines if the API controller class path should be used.
      * @return string The file path for the controller class.
      */
-    private function setControllerClassPath(array $resourceData): string
+    private function setControllerClassPath(array $resourceData, bool $isApi = false): string
     {
-        $controllerClassPath = app_path('Http/Controllers/' . $resourceData['controller_class'] . '.php'); // Default controller class path
+        $defaultControllerClassPath = 'Http/Controllers/';
+        if ($isApi) {
+            $defaultControllerClassPath = 'Http/Controllers/Api/';
+        }
+
+        $controllerClassPath = app_path($defaultControllerClassPath . $resourceData['controller_class'] . '.php'); // Default controller class path
 
         // Check if a controller prefix is specified
         if (!empty($resourceData['controller_prefix'])) {
-            $controllerClassPath = app_path('Http/Controllers/' . $resourceData['controller_prefix'] . $this->SEPARATOR . $resourceData['controller_class'] . '.php'); // Controller class path with prefix
+            $controllerClassPath = app_path($defaultControllerClassPath . $resourceData['controller_prefix'] . $this->SEPARATOR . $resourceData['controller_class'] . '.php'); // Controller class path with prefix
         }
 
         return $controllerClassPath; // Return the controller class path
