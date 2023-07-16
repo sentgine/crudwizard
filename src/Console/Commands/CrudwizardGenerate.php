@@ -125,6 +125,13 @@ class CrudwizardGenerate extends Command
             '--fields' => $fields,
             '--prefix' => $routePrefix,
         ]);
+
+        // Generate the rest api endpoint
+        $this->call('crudwizard:generate-rest-api', [
+            '--resource' => $resourceName,
+            '--fields' => $fields,
+            '--prefix' => $routePrefix,
+        ]);
     }
 
     /**
@@ -227,16 +234,19 @@ class CrudwizardGenerate extends Command
         $resource_directory = base_path(config('crudwizard.path.view') . $resource_name_plural);
         $controller_directory = base_path(config('crudwizard.path.controller'));
         $controller_prefix = '';
+        $controller_api_prefix = '';
         $view_prefix = '';
         if (!empty($routePrefix)) {
             $resource_directory = base_path(config('crudwizard.path.view') . $routePrefix . $this->SEPARATOR . $resource_name_plural);
             $controller_prefix = $this->setStudlyDirectory($routePrefix);
+            $controller_api_prefix = $this->setStudlyDirectory($routePrefix);
             $view_prefix = $this->setViewDirectory($routePrefix);
         }
 
         return [
             'route_prefix' => $routePrefix,
             'controller_prefix' =>  $controller_prefix,
+            'controller_api_prefix' =>  $controller_api_prefix,
             'view_prefix' => $view_prefix,
             'fields' => $fields,
             'layout_name' => config('crudwizard.blade.layout'),
@@ -250,18 +260,23 @@ class CrudwizardGenerate extends Command
             'controller_namespace' => config('crudwizard.namespace.controller'),
             'controller_api_namespace' => config('crudwizard.namespace.controller_api'),
             'request_namespace' => config('crudwizard.namespace.request'),
+            'resource_namespace' => config('crudwizard.namespace.resource'),
             'model_namespace' => config('crudwizard.namespace.model'),
             'test_namespace' => config('crudwizard.namespace.tests'),
             'service_namespace' => config('crudwizard.namespace.service'),
             'factory_namespace' => config('crudwizard.namespace.factory'),
             'model_class' =>  $resource_name_ucfirst,
             'controller_class' => $resource_name_ucfirst . 'Controller',
+            'controller_api_base_class' => 'ApiController',
+            'controller_api_class' => $resource_name_ucfirst . 'Controller',
             'request_class' => $resource_name_ucfirst . 'Request',
+            'resource_class' => $resource_name_ucfirst . 'Resource',
             'factory_class' => $resource_name_ucfirst . 'Factory',
             'test_class' => $resource_name_ucfirst . 'ControllerTest',
             'search_service_base_class' => 'SearchService',
             'search_service_class' => $resource_name_ucfirst . 'SearchService',
             'use_request_class' => config('crudwizard.namespace.request') . '\\' . $resourceName . 'Request',
+            'use_resource_class' => config('crudwizard.namespace.resource') . '\\' . $resourceName . 'Resource',
             'use_model_class' => config('crudwizard.namespace.model') . '\\' . $resource_name_ucfirst,
             'use_search_service_class' => config('crudwizard.namespace.service') . '\\' . $resource_name_ucfirst . 'SearchService',
         ];
@@ -344,6 +359,14 @@ class CrudwizardGenerate extends Command
             'child_search_class' => [
                 'origin' => base_path($basePathOrigin . 'SearchServiceChildClass.stub'),
                 'destination' => app_path('Services/Search/' . $filename . '.php')
+            ],
+            'base_rest_api_class' => [
+                'origin' => base_path($basePathOrigin . 'ApiController.stub'),
+                'destination' => app_path('Http/Controllers/Api/' . $filename . '.php')
+            ],
+            'rest_api_class' => [
+                'origin' => base_path($basePathOrigin . 'RestApiController.stub'),
+                'destination' => app_path('Http/Controllers/' . $filename . '.php')
             ],
         ];
     }

@@ -1,0 +1,146 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Http\Controllers\Api\ApiController;
+use {{ useRequestClass }};
+use {{ useResourceClass }};
+use {{ useModelClass }};
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
+
+class {{ controllerApiClass }} extends {{ controllerApiBaseClass }}
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection The resource collection.
+     */
+    public function index(): AnonymousResourceCollection
+    {
+        return {{ resourceClass }}::collection({{ modelClass }}::paginate());
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request The HTTP request.
+     * @return \Illuminate\Http\JsonResponse The JSON response.
+     */
+    public function store(Request $request): JsonResponse
+    {
+        ${{ resourceNameSingular }}Request = new {{ requestClass }}();
+        $validator = $this->validateRequest($request, ${{ resourceNameSingular }}Request->rules());
+
+        if ($validator->fails()) {
+            return $this->validationErrorResponse($validator);
+        }
+
+        return $this->successResponse(
+            'Successfully created the {{ resourceNameSingular }}!',
+            new {{ resourceClass }}({{ modelClass }}::create($request->all())),
+            Response::HTTP_CREATED
+        );
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param string $id The resource ID.
+     * @return \Illuminate\Http\JsonResponse The JSON response.
+     */
+    public function show(string $id): JsonResponse
+    {
+        try {
+            ${{ resourceNameSingular }} = $this->findById($id);
+
+            return $this->successResponse(
+                'Successfully retrieved the {{ resourceNameSingular }}!',
+                ${{ resourceNameSingular }},
+                Response::HTTP_OK
+            );
+        } catch (ModelNotFoundException $exception) {
+            return $this->errorResponse(
+                $exception->getMessage(),
+                null,
+                Response::HTTP_NOT_FOUND
+            );
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request The HTTP request.
+     * @param string $id The resource ID.
+     * @return \Illuminate\Http\JsonResponse The JSON response.
+     */
+    public function update(Request $request, string $id): JsonResponse
+    {
+        try {
+            ${{ resourceNameSingular }}Request = new {{ requestClass }}();
+            $validator = $this->validateRequest($request, ${{ resourceNameSingular }}Request->rules());
+
+            if ($validator->fails()) {
+                return $this->validationErrorResponse($validator);
+            }
+
+            ${{ resourceNameSingular }} = $this->findById($id);
+            ${{ resourceNameSingular }}->update($request->all());
+
+            return $this->successResponse(
+                'Successfully updated the {{ resourceNameSingular }}!',
+                ${{ resourceNameSingular }},
+                Response::HTTP_OK
+            );
+        } catch (ModelNotFoundException $exception) {
+            return $this->errorResponse(
+                $exception->getMessage(),
+                null,
+                Response::HTTP_NOT_FOUND
+            );
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param string $id The resource ID.
+     * @return \Illuminate\Http\JsonResponse The JSON response.
+     */
+    public function destroy(string $id): JsonResponse
+    {
+        try {
+            ${{ resourceNameSingular }} = $this->findById($id);
+            ${{ resourceNameSingular }}->delete();
+
+            return $this->successResponse(
+                'Successfully deleted the {{ resourceNameSingular }}!',
+                ${{ resourceNameSingular }},
+                Response::HTTP_OK
+            );
+        } catch (ModelNotFoundException $exception) {
+            return $this->errorResponse(
+                $exception->getMessage(),
+                null,
+                Response::HTTP_NOT_FOUND
+            );
+        }
+    }
+
+    /**
+     * Find a {{ resourceNameSingular }} by ID or throw a ModelNotFoundException.
+     *
+     * @param string $id The resource ID.
+     * @return \App\Models\{{ modelClass }} The found {{ resourceNameSingular }}.
+     *
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     */
+    private function findById(string $id)
+    {
+        return {{ modelClass }}::findOrFail($id);
+    }
+}

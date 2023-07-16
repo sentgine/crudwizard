@@ -15,7 +15,7 @@ Crudwizard is a powerful Laravel package designed to simplify the process of gen
 
 - Laravel 10.x or higher.
 - PHP 8.0 or higher.
-- Use Tailwind CSS to make your life easier
+- Use Tailwind CSS to make your life easier.
 
 ## Installation
 
@@ -170,6 +170,41 @@ php artisan serve
 ```bash
 npm run dev
 ```
+
+## Testing
+By default, generating the CRUD will create a test file. There are two things you need to do to be able to test this. 
+
+(1) Add this code below to your Laravel app's config/database.php file under the connections key.
+```php
+'testing' => [
+    'driver' => 'mysql',
+    'host' => env('DB_TEST_HOST', '127.0.0.1'),
+    'port' => env('DB_TEST_PORT', '3306'),
+    'database' => env('DB_TEST_DATABASE', 'test_database'),
+    'username' => env('DB_TEST_USERNAME', 'root'),
+    'password' => env('DB_TEST_PASSWORD', ''),
+    'unix_socket' => env('DB_SOCKET', ''),
+    'charset' => 'utf8mb4',
+    'collation' => 'utf8mb4_unicode_ci',
+    'prefix' => '',
+    'prefix_indexes' => true,
+    'strict' => true,
+    'engine' => null,
+    'options' => extension_loaded('pdo_mysql') ? array_filter([
+        PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+    ]) : [],
+],
+```
+(2) Under the root directory of your Laravel app, you will see a phpunit.xml file. Add this code below inside the <php> ... </php> tag.
+```php
+<env name="DB_CONNECTION" value="testing"/>
+<env name="DB_TEST_HOST" value="127.0.0.1"/>
+<env name="DB_TEST_PORT" value="3306"/>
+<env name="DB_TEST_DATABASE" value="test_database"/>
+<env name="DB_TEST_USERNAME" value="root"/>
+<env name="DB_TEST_PASSWORD" value=""/>
+```
+This will allow you to use a new database for your test. It is generally good practice not to use the configuration for your live database. Instead, use a separate database for testing.
 
 ## Changelog
 Please see the [CHANGELOG](https://github.com/sentgine/crudwizard/CHANGELOG.md) file for details on what has changed.

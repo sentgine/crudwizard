@@ -1,0 +1,69 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
+class {{ className }} extends Controller
+{
+    /**
+     * Validate the request using the given rules.
+     *
+     * @param \Illuminate\Http\Request $request The HTTP request.
+     * @param array $rules The validation rules.
+     * @return mixed The validator instance.
+     */
+    protected function validateRequest(Request $request, array $rules)
+    {
+        return Validator::make($request->all(), $rules);
+    }
+
+    /**
+     * Return a JSON success response.
+     *
+     * @param string $message The success message.
+     * @param mixed $data The data to include in the response.
+     * @param int $statusCode The HTTP status code.
+     * @return \Illuminate\Http\JsonResponse The JSON response.
+     */
+    protected function successResponse(string $message, $data, int $statusCode): JsonResponse
+    {
+        return response()->json([
+            'message' => $message,
+            'data' => $data,
+        ], $statusCode);
+    }
+
+    /**
+     * Return a JSON validation error response.
+     *
+     * @param mixed $validator The validator instance.
+     * @return \Illuminate\Http\JsonResponse The JSON response.
+     */
+    protected function validationErrorResponse($validator): JsonResponse
+    {
+        return response()->json([
+            'message' => 'There are errors when validating the request!',
+            'errors' => $validator->errors(),
+        ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * Return a JSON error response.
+     *
+     * @param string $message The error message.
+     * @param mixed $data The data to include in the response.
+     * @param int $statusCode The HTTP status code.
+     * @return \Illuminate\Http\JsonResponse The JSON response.
+     */
+    protected function errorResponse(string $message, $data, int $statusCode): JsonResponse
+    {
+        return response()->json([
+            'message' => $message,
+            'data' => $data,
+        ], $statusCode);
+    }
+}

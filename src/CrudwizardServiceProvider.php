@@ -38,6 +38,8 @@ class CrudwizardServiceProvider extends ServiceProvider
                 Commands\CrudwizardSearch::class,
                 Commands\CrudwizardLayout::class,
                 Commands\CrudwizardView::class,
+                Commands\CrudwizardBaseRestApi::class,
+                Commands\CrudwizardRestApi::class,
             ]);
         }
     }

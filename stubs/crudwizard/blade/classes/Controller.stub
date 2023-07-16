@@ -105,7 +105,7 @@ class {{ controllerClass }} extends Controller
         $validated = $request->safe()->only(${{ resourceNameSingular }}->getFillable());
 
         // Update the {{ resourceNameSingular }} with the retrieved data.
-        ${{ resourceNameSingular }}->update($validated);
+        ${{ modelClass }}->update($validated);
 
         // Redirect to the updated {{ resourceNameSingular }}'s page with a success message.
         return redirect("{{ routePrefix }}{{ resourceNamePlural }}/{${{ resourceNameSingular }}->id}")->with('prompt', 'A {{ resourceNameSingular }} updated successfully!');
@@ -121,7 +121,7 @@ class {{ controllerClass }} extends Controller
     public function destroy({{ modelClass }} ${{ resourceNameSingular }}): RedirectResponse
     {
         // Delete the specified {{ resourceNameSingular }}.
-        ${{ resourceNameSingular }}->delete();
+        ${{ modelClass }}->delete();
 
         // Redirect to the {{ resourceNamePlural }} index page with a success message.
         return redirect("{{ routePrefix }}{{ resourceNamePlural }}")->with('prompt', 'A {{ resourceNameSingular }} deleted successfully!');
