@@ -24,26 +24,50 @@ Crudwizard is a powerful Laravel package designed to simplify the process of gen
 ```bash
 composer require sentgine/crudwizard
 ```
+
 (2) You must publish the config and view files for better control.
+
 ```bash
 php artisan vendor:publish --tag="crudwizard"
 ```
+
 (3) Then, at the root of your laravel project, type the command below. It will ask you the name of the controller and the form fields.
+
 ```bash
 php artisan crudwizard:generate
 ```
+
 or
 
 ```bash
 php artisan crudwizard:generate --resource="post"
 ```
+
+Sometimes you may want to overwrite the existing resource files. Crudwizard does not allow you to do that by default, as it will skip overwriting your files. You can can just add the --force option to your command.
+
+```bash
+php artisan crudwizard:generate --resource="post" --force
+```
+
 (4) You can also specify a prefix. It will then create the controller under the Dev/Admin and the views under the folder dev/admin.
 
 ```bash
-php artisan crudwizard:generate --resource="dev/admin"
+php artisan crudwizard:generate --resource="post" --prefix="dev/admin"
 ```
 
-(5) To get you started quickly, I would advise you to copy and paste the entire Tailwind CSS @layer component directive below. You can customize this later.
+(5) If you make a mistake, you can just delete the resource files. Note that this will not delete the migration files. You'll have to manually delete it.
+
+```bash
+php artisan crudwizard:delete --resource="post"
+```
+
+or
+
+```bash
+php artisan crudwizard:delete --resource="post" --prefix="dev/admin"
+```
+
+(6) To get you started quickly, I would advise you to copy and paste the entire Tailwind CSS @layer component directive below. You can customize this later.
 
 ```css
 @layer components {
@@ -161,14 +185,21 @@ php artisan crudwizard:generate --resource="dev/admin"
   }
 ```
 
-(6) Make sure you run your Laravel local server.
+(7) Make sure you run your Laravel local server.
 ```bash
 php artisan serve
 ```
 
-(7) Open another terminal, and run the command below to compile and build your frontend asssets.
+(8) Open another terminal, and run the command below to compile and build your frontend asssets.
+
 ```bash
 npm run dev
+```
+
+(9) You can explore other commands as well.
+
+```bash
+php artisan crudwizard --help
 ```
 
 ## Testing
@@ -195,7 +226,7 @@ By default, generating the CRUD will create a test file. There are two things yo
     ]) : [],
 ],
 ```
-(2) Under the root directory of your Laravel app, you will see a phpunit.xml file. Add this code below inside the <php> ... </php> tag.
+(2) Under the root directory of your Laravel app, you will see a phpunit.xml file. Add this code below inside the "php" tag.
 ```php
 <env name="DB_CONNECTION" value="testing"/>
 <env name="DB_TEST_HOST" value="127.0.0.1"/>
@@ -205,6 +236,16 @@ By default, generating the CRUD will create a test file. There are two things yo
 <env name="DB_TEST_PASSWORD" value=""/>
 ```
 This will allow you to use a new database for your test. It is generally good practice not to use the configuration for your live database. Instead, use a separate database for testing.
+
+(3) And add this to your .env file under the root of your Laravel app.
+
+```
+DB_TEST_HOST=127.0.0.1
+DB_TEST_PORT=3306
+DB_TEST_DATABASE=core_test_database
+DB_TEST_USERNAME=root
+DB_TEST_PASSWORD=
+```
 
 ## Changelog
 Please see the [CHANGELOG](https://github.com/sentgine/crudwizard/CHANGELOG.md) file for details on what has changed.
