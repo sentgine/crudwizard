@@ -22,7 +22,7 @@ Crudwizard is a powerful Laravel package designed to simplify the process of gen
 (1) You can install the package via Composer by running the following command:
 
 ```bash
-composer require --dev sentgine/crudwizard
+composer require sentgine/crudwizard
 ```
 
 (2) You must publish the config and view files for better control.
