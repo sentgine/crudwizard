@@ -2,7 +2,7 @@
 
 namespace Sentgine\Crudwizard\Console\Commands;
 
-use Illuminate\Support\Str;
+
 
 class CrudwizardRequest extends CrudwizardGenerate
 {
@@ -38,6 +38,9 @@ class CrudwizardRequest extends CrudwizardGenerate
 
         $this->info("Generating " . $data['request_namespace'] . "\\" . $data['request_class'] . "...");
 
+        $directoryFullPath = $this->replaceDirectorySlash(app_path('Http/Requests/' . $data['request_class']));
+        $this->createDirectoryRecursively($directoryFullPath);
+        
         // Generate the file by replacing placeholders in the stub with actual values.
         $this->generateMyFileFromTheStub(
             [
