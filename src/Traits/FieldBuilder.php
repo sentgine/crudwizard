@@ -44,13 +44,32 @@ trait FieldBuilder
     {
         $indentation = "\n\t\t\t";
         $string = '';
+        $fieldType = '';
+        $attribute = '';
 
         // Iterate over each field in the $fields array.
         foreach ($fields as $value) {
             $string .= $indentation;
 
+            switch ($value['field_type']) {
+                case 'email':
+                    $fieldType = 'string';
+                    $attribute = '->unique()';
+                    break;
+                case 'integer':
+                    $fieldType = 'bigInteger';
+                    $attribute = '';
+                    break;
+                default:
+                    $fieldType = $value['field_type'];
+                    $attribute = '';
+                    break;
+            }
+
             // Append the field_name enclosed in single quotes and followed by a comma.
-            $string .= '$table->' . $value['field_type'] . "('" . $value['field_name'] . "')->nullable();";
+            $string .= '$table->' . $fieldType . "('" . $value['field_name'] . "')";
+            $string .= $attribute . '->nullable()';
+            $string .= ';';
         }
 
         // Return the generated string.
