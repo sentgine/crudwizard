@@ -60,6 +60,10 @@ trait FieldBuilder
                     $fieldType = 'bigInteger';
                     $attribute = '';
                     break;
+                case 'foreignId':
+                    $fieldType = 'foreignId';
+                    $attribute = '->index()';
+                    break;
                 default:
                     $fieldType = $value['field_type'];
                     $attribute = '';

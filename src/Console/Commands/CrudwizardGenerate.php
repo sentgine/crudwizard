@@ -4,11 +4,9 @@ namespace Sentgine\Crudwizard\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
-use Sentgine\Crudwizard\Traits\File;
 use Sentgine\Crudwizard\Traits\FieldBuilder;
+use Sentgine\Crudwizard\Traits\File;
 use Symfony\Component\Console\Helper\Table;
-
-use function PHPUnit\Framework\directoryExists;
 
 class CrudwizardGenerate extends Command
 {
@@ -151,6 +149,7 @@ class CrudwizardGenerate extends Command
             'dateTime',
             'decimal',
             'enum',
+            'foreignId',
         ];
     }
 
